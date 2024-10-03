@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show update destroy ]
+  before_action :load_user, only: %i[ show update destroy ]
 
   def index
-    @users = User.all
+    @users = User.where(deleted_at: nil)
 
     render json: @users
   end
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   end
 
   private
-    def set_user
+    def load_user
       @user = User.find(params[:id])
     end
 

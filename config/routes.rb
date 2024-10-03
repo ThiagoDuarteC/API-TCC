@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
-  resources :users
+  resources :accounts
   resources :goals
+  resources :users
 end
