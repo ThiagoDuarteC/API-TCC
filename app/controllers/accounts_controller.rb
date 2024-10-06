@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   before_action :load_account, only: %i[ show update destroy ]
 
   def index
-    @accounts = Account.where(user_id: params[:user_id], deleted_at: nil)
+    @accounts = Account.where(user_id: params[:current_user], deleted_at: nil)
 
     render json: @accounts
   end
@@ -39,7 +39,7 @@ class AccountsController < ApplicationController
 
   private
     def load_account
-      @account = Account.find_by(id: params[:id], user_id: params[:user_id])
+      @account = Account.find_by(id: params[:id], user_id: params[:current_user], deleted_at: nil)
     end
 
     def account_params
