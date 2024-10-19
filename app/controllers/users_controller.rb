@@ -15,9 +15,10 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user, status: :created
+      token = encode_token(@user.id)
+      render json: { token: token }, status: :created
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: { errors: ['Erro ao criar usuário'] }, status: :unprocessable_entity
     end
   end
 
@@ -34,6 +35,10 @@ class UsersController < ApplicationController
   end
 
   private
+    def encode_token(payload)
+      JWT.encode(payload, Rails.application.secret_key_base)
+    end
+
     def load_user
       @user = User.find(params[:id])
     end

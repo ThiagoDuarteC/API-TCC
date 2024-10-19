@@ -4,6 +4,10 @@ gem "rails", "~> 7.2.1"
 gem "mysql2", "~> 0.5"
 gem "puma", ">= 5.0"
 gem "bcrypt", "~> 3.1.7"
+gem 'byebug'
+gem 'jwt'
+gem 'rack-cors', require: 'rack/cors'
+
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
