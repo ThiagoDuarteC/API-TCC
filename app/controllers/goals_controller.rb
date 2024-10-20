@@ -2,7 +2,7 @@ class GoalsController < ApplicationController
   before_action :load_goal, only: %i[ show update destroy ]
 
   def index
-    @goals = Goal.where(user_id: params[:current_user], deleted_at: nil)
+    @goals = Goal.where(user: current_user, deleted_at: nil)
 
     render json: @goals
   end
@@ -39,7 +39,7 @@ class GoalsController < ApplicationController
 
   private
     def load_goal
-      @goal = Goal.find_by(id: params[:id], user_id: params[:current_user], deleted_at: nil)
+      @goal = Goal.find_by(id: params[:id], user: current_user, deleted_at: nil)
     end
 
     def goal_params

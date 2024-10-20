@@ -2,7 +2,7 @@ class CategoriesController < ApplicationController
   before_action :load_category, only: %i[ show update destroy ]
 
   def index
-    @categories = Category.where(user_id: params[:current_user], deleted_at: nil)
+    @categories = Category.where(user: current_user, deleted_at: nil)
 
     render json: @categories
   end
@@ -39,7 +39,7 @@ class CategoriesController < ApplicationController
 
   private
     def load_category
-      @category = Category.find_by(id: params[:id], user_id: params[:current_user], deleted_at: nil)
+      @category = Category.find_by(id: params[:id], user: current_user, deleted_at: nil)
     end
 
     def category_params

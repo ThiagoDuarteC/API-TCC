@@ -2,7 +2,7 @@ class TransactionsController < ApplicationController
   before_action :load_transaction, only: %i[ show update destroy ]
 
   def index
-    @transactions = Transaction.where(user_id: params[:current_user], deleted_at: nil)
+    @transactions = Transaction.where(user: current_user, deleted_at: nil)
 
     render json: @transactions
   end
@@ -35,7 +35,7 @@ class TransactionsController < ApplicationController
 
   private
     def load_transaction
-      @transaction = Transaction.find_by(id: params[:id], user_id: params[:current_user], deleted_at: nil)
+      @transaction = Transaction.find_by(id: params[:id], user: current_user, deleted_at: nil)
     end
 
     def transaction_params

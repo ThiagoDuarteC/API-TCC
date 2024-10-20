@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   before_action :load_account, only: %i[ show update destroy ]
 
   def index
-    @accounts = Account.where(user_id: params[:current_user], deleted_at: nil)
+    @accounts = Account.where(user: current_user, deleted_at: nil)
 
     render json: @accounts
   end
@@ -15,9 +15,9 @@ class AccountsController < ApplicationController
     @account = Account.new(account_params)
 
     if @account.save
-      render json: @account, status: :created, location: @account
+      render json: { success: ['Conta criada com sucesso'] }, status: :created
     else
-      render json: @account.errors, status: :unprocessable_entity
+      render json: { errors: ['Erro ao criar conta'] }, status: :unprocessable_entity
     end
   end
 
@@ -39,10 +39,10 @@ class AccountsController < ApplicationController
 
   private
     def load_account
-      @account = Account.find_by(id: params[:id], user_id: params[:current_user], deleted_at: nil)
+      @account = Account.find_by(id: params[:id], user: current_user, deleted_at: nil)
     end
 
     def account_params
-      params.permit(:name, :initial_balance, :user_id, :deleted_at)
+      params.permit(:name, :bank_name, :initial_balance, :user_id, :deleted_at)
     end
 end
