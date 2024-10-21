@@ -13,7 +13,7 @@ class AccountsController < ApplicationController
 
   def create
     @account = Account.new(account_params)
-
+    @account.user = current_user
     if @account.save
       render json: { success: ['Conta criada com sucesso'] }, status: :created
     else

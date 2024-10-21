@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:email])
 
     if user&.authenticate(params[:password])
-      token = encode_token(user_id: user.id)
+      token = encode_token(user.id)
       render json: { token: token }, status: :ok
     else
       render json: { errors: ['E-mail ou senha incorretos'] }, status: :unauthorized
@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
 
   private
 
-  def encode_token(payload)
-    JWT.encode(payload, Rails.application.secret_key_base)
+  def encode_token(user_id)
+    JWT.encode({user_id: user_id}, Rails.application.secret_key_base)
   end
 end
