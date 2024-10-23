@@ -1,13 +1,24 @@
 class AccountsController < ApplicationController
-  before_action :load_account, only: %i[ show update destroy ]
+  before_action :load_account, only: %i[ show edit update destroy ]
 
   def index
     @accounts = Account.where(user: current_user, deleted_at: nil)
 
-    render json: @accounts
+    accounts_with_balance = @accounts.map do |account|
+      total_transactions = account.transactions.sum(:value)
+      balance = account.initial_balance + total_transactions
+
+      account.attributes.merge(balance: balance)
+    end
+
+    render json: accounts_with_balance
   end
 
   def show
+    render json: @account
+  end
+
+  def edit
     render json: @account
   end
 
