@@ -13,11 +13,12 @@ class GoalsController < ApplicationController
 
   def create
     @goal = Goal.new(goal_params)
+    @goal.user = current_user
 
     if @goal.save
-      render json: @goal, status: :created, location: @goal
+      render json: { success: ['Conta criada com sucesso'] }, status: :created, location: @goal
     else
-      render json: @goal.errors, status: :unprocessable_entity
+      render json: { errors: ['Erro ao criar conta'] }, status: :unprocessable_entity
     end
   end
 
@@ -43,6 +44,6 @@ class GoalsController < ApplicationController
     end
 
     def goal_params
-      params.permit(:name, :description, :background_color, :icon_name, :deadline, :user_id, :deleted_at)
+      params.permit(:name, :description, :value, :background_color, :icon_name, :deadline, :user_id, :deleted_at)
     end
 end
