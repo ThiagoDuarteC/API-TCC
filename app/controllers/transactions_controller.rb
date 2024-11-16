@@ -12,7 +12,7 @@ class TransactionsController < ApplicationController
   end
 
   def load_info
-    @categories = Category.select(:id, :name).where(deleted_at: nil, user: current_user)
+    @categories = Category.select(:id, :name).where(deleted_at: nil, user: [current_user, nil])
     @accounts = Account.select(:id, :name).where(deleted_at: nil, user: current_user)
     @goals = Goal.select(:id, :name).where(deleted_at: nil, user: current_user)
 
@@ -25,11 +25,12 @@ class TransactionsController < ApplicationController
 
   def create
     @transaction = Transaction.new(transaction_params)
+    @transaction.user = current_user
 
     if @transaction.save
-      render json: @transaction, status: :created, location: @transaction
+      render json: { success: ['Transação criada com sucesso'] }, status: :created, location: @transaction
     else
-      render json: @transaction.errors, status: :unprocessable_entity
+      render json: { errors: ['Erro ao criar transação'] }, status: :unprocessable_entity
     end
   end
 
@@ -51,6 +52,6 @@ class TransactionsController < ApplicationController
     end
 
     def transaction_params
-      params.permit(:description, :value, :transaction_type, :user_id, :category_id, :account_id, :deleted_at)
+      params.permit(:description, :value, :transaction_type, :transaction_date, :user_id, :category_id, :account_id, :goal_id, :deleted_at)
     end
 end
