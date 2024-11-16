@@ -11,6 +11,18 @@ class TransactionsController < ApplicationController
     render json: @transaction
   end
 
+  def load_info
+    @categories = Category.select(:id, :name).where(deleted_at: nil, user: current_user)
+    @accounts = Account.select(:id, :name).where(deleted_at: nil, user: current_user)
+    @goals = Goal.select(:id, :name).where(deleted_at: nil, user: current_user)
+
+    render json: {
+      categories: @categories,
+      accounts: @accounts,
+      goals: @goals
+    }
+  end
+
   def create
     @transaction = Transaction.new(transaction_params)
 
