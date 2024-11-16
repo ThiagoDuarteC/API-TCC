@@ -3,15 +3,14 @@ class AccountsController < ApplicationController
 
   def index
     @accounts = Account.where(user: current_user, deleted_at: nil)
-
+  
     accounts_with_balance = @accounts.map do |account|
-      total_transactions = account.transactions.sum(:value)
-      balance = account.initial_balance + total_transactions
-
-      account.attributes.merge(balance: balance)
+      account.attributes.merge(balance: account.balance)
     end
+  
+    total_balance = @accounts.sum { |account| account.balance }
 
-    render json: accounts_with_balance
+    render json: { accounts: accounts_with_balance, total_balance: total_balance }
   end
 
   def show

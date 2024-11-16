@@ -4,7 +4,16 @@ class GoalsController < ApplicationController
   def index
     @goals = Goal.where(user: current_user, deleted_at: nil).order(deadline: :desc)
 
-    render json: @goals
+    goals_with_balance = @goals.map do |goal|
+      goal.attributes.merge(balance: goal.balance)
+    end
+
+    total_goals = @goals.sum { |goal| goal.value }
+
+    @accounts = Account.where(user: current_user, deleted_at: nil)
+    total_balance = @accounts.sum { |account| account.balance }
+
+    render json: { goals: goals_with_balance, total_goals: total_goals, total_balance: total_balance }
   end
 
   def show
