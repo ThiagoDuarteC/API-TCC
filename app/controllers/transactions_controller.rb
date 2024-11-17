@@ -2,9 +2,15 @@ class TransactionsController < ApplicationController
   before_action :load_transaction, only: %i[ show update destroy ]
 
   def index
-    @transactions = Transaction.where(user: current_user, deleted_at: nil)
-
-    render json: @transactions
+    @transactions = Transaction.includes(:category, :account)
+                                .where(user: current_user, deleted_at: nil)
+  
+    render json: @transactions.as_json(
+      include: {
+        category: { only: :name },
+        account: { only: :name }
+      }
+    )
   end
 
   def show
