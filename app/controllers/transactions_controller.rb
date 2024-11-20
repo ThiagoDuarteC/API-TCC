@@ -3,7 +3,8 @@ class TransactionsController < ApplicationController
 
   def index
     @transactions = Transaction.includes(:category, :account)
-                                .where(user: current_user, deleted_at: nil)
+                               .where(user: current_user, deleted_at: nil)
+                               .order(created_at: :desc)
   
     render json: @transactions.as_json(
       include: {

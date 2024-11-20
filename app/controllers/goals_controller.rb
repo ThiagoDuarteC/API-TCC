@@ -2,7 +2,7 @@ class GoalsController < ApplicationController
   before_action :load_goal, only: %i[ show update destroy ]
 
   def index
-    @goals = Goal.where(user: current_user, deleted_at: nil).order(deadline: :desc)
+    @goals = Goal.where(user: current_user, deleted_at: nil).order(deadline: :asc)
 
     goals_with_balance = @goals.map do |goal|
       goal.attributes.merge(balance: goal.balance)

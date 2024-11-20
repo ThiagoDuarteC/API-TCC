@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   before_action :load_account, only: %i[ show edit update destroy ]
 
   def index
-    @accounts = Account.where(user: current_user, deleted_at: nil)
+    @accounts = Account.where(user: current_user, deleted_at: nil).order(created_at: :asc)
   
     accounts_with_balance = @accounts.map do |account|
       account.attributes.merge(balance: account.balance)
