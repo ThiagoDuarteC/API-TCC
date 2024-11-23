@@ -1,5 +1,6 @@
 class TransactionsController < ApplicationController
   before_action :load_transaction, only: %i[ show update destroy ]
+  before_action :set_load_info, only: %i[ show load_info ]
 
   def index
     @transactions = Transaction.includes(:category, :account)
@@ -15,14 +16,15 @@ class TransactionsController < ApplicationController
   end
 
   def show
-    render json: @transaction
+    render json: {
+      transaction: @transaction,
+      categories: @categories,
+      accounts: @accounts,
+      goals: @goals
+    }
   end
 
   def load_info
-    @categories = Category.select(:id, :name).where(deleted_at: nil, user: [current_user, nil])
-    @accounts = Account.select(:id, :name).where(deleted_at: nil, user: current_user)
-    @goals = Goal.select(:id, :name).where(deleted_at: nil, user: current_user)
-
     render json: {
       categories: @categories,
       accounts: @accounts,
@@ -56,6 +58,12 @@ class TransactionsController < ApplicationController
   private
     def load_transaction
       @transaction = Transaction.find_by(id: params[:id], user: current_user, deleted_at: nil)
+    end
+
+    def set_load_info
+      @categories = Category.select(:id, :name).where(deleted_at: nil, user: [current_user, nil])
+      @accounts = Account.select(:id, :name).where(deleted_at: nil, user: current_user)
+      @goals = Goal.select(:id, :name).where(deleted_at: nil, user: current_user)
     end
 
     def transaction_params
