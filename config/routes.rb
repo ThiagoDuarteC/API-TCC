@@ -4,6 +4,13 @@ Rails.application.routes.draw do
       get :load_info
     end
   end
+  resources :reports do
+    collection do
+      get :category_by_debit
+      get :category_by_credit
+      get :balance_per_account
+    end
+  end
   resources :categories
   resources :accounts
   resources :goals
