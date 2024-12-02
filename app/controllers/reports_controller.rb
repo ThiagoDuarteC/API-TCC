@@ -29,7 +29,7 @@ class ReportsController < ApplicationController
     @accounts = Account.where(user: current_user, deleted_at: nil).order(created_at: :asc)
 
     accounts_with_balance = @accounts.map do |account|
-      { name: account.name, balance: account.balance }
+      { name: account.name, value: account.balance }
     end
 
     render json: { accounts: accounts_with_balance }
