@@ -14,7 +14,11 @@ Rails.application.routes.draw do
   resources :categories
   resources :accounts
   resources :goals
-  resources :users
+  resources :users do
+    collection do
+      get :get_user
+    end
+  end
   resources :dashboard
   resources :sessions
 end
